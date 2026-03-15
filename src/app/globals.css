@@ -1,26 +1,186 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-syne);
+  --font-mono: var(--font-plex-mono);
+
+  /* Blade Runner 2049 palette */
+  --color-amber-glow: #e8912a;
+  --color-amber-dim: #a86520;
+  --color-amber-pale: #f0c78a;
+  --color-teal-glow: #00b4be;
+  --color-teal-dim: #0a7a82;
+  --color-teal-pale: #8ad8dc;
+  --color-steel: #1a2030;
+  --color-void: #06080e;
+  --color-haze: #0d1018;
+  --color-fog: rgba(255, 180, 80, 0.03);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root {
+  --background: #06080e;
+  --foreground: #c8bfb0;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-syne), system-ui, sans-serif;
 }
+
+/* ── Scanlines ── */
+.scanlines {
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(255, 255, 255, 0.015) 2px,
+    rgba(255, 255, 255, 0.015) 4px
+  );
+}
+
+/* ── Film grain noise ── */
+.noise {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  background-size: 128px 128px;
+}
+
+/* ── Glow keyframes ── */
+@keyframes pulse-amber {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+@keyframes pulse-teal {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 0.9; }
+}
+
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  92% { opacity: 1; }
+  93% { opacity: 0.8; }
+  94% { opacity: 1; }
+  96% { opacity: 0.9; }
+  97% { opacity: 1; }
+}
+
+@keyframes drift-up {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes hologram-shift {
+  0%, 100% {
+    text-shadow: 0 0 20px rgba(0, 180, 190, 0.3), 0 0 40px rgba(0, 180, 190, 0.1);
+  }
+  50% {
+    text-shadow: 0 0 25px rgba(0, 180, 190, 0.5), 0 0 50px rgba(0, 180, 190, 0.15), -1px 0 rgba(232, 145, 42, 0.1);
+  }
+}
+
+@keyframes scan-line-move {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+@keyframes border-glow {
+  0%, 100% { border-color: rgba(0, 180, 190, 0.15); }
+  50% { border-color: rgba(0, 180, 190, 0.3); }
+}
+
+/* ── Utility animations ── */
+.animate-drift-up {
+  animation: drift-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  opacity: 0;
+}
+
+.animate-fade-in {
+  animation: fade-in 1s ease forwards;
+  opacity: 0;
+}
+
+.animate-flicker {
+  animation: flicker 8s infinite;
+}
+
+.animate-hologram {
+  animation: hologram-shift 4s ease-in-out infinite;
+}
+
+.animate-border-glow {
+  animation: border-glow 3s ease-in-out infinite;
+}
+
+/* ── Glass panel ── */
+.glass-panel {
+  background: linear-gradient(
+    135deg,
+    rgba(13, 16, 24, 0.8),
+    rgba(10, 14, 22, 0.6)
+  );
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 180, 190, 0.1);
+  box-shadow:
+    0 0 30px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 180, 80, 0.03);
+}
+
+.glass-panel-amber {
+  background: linear-gradient(
+    135deg,
+    rgba(30, 18, 8, 0.6),
+    rgba(10, 14, 22, 0.4)
+  );
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(232, 145, 42, 0.12);
+  box-shadow:
+    0 0 30px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 180, 80, 0.05);
+}
+
+/* ── Scrollbar ── */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 3px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgba(0, 180, 190, 0.15);
+  border-radius: 1px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 180, 190, 0.3);
+}
+
+/* ── Selection ── */
+::selection {
+  background: rgba(232, 145, 42, 0.3);
+  color: #f0c78a;
+}
+
+/* ── Input global styles ── */
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 30px #0d1018 inset !important;
+  -webkit-text-fill-color: #c8bfb0 !important;
+}
+
+/* ── Stagger children ── */
+.stagger-children > * {
+  opacity: 0;
+  animation: drift-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.stagger-children > *:nth-child(1) { animation-delay: 0.1s; }
+.stagger-children > *:nth-child(2) { animation-delay: 0.2s; }
+.stagger-children > *:nth-child(3) { animation-delay: 0.3s; }
+.stagger-children > *:nth-child(4) { animation-delay: 0.4s; }
+.stagger-children > *:nth-child(5) { animation-delay: 0.5s; }
+.stagger-children > *:nth-child(6) { animation-delay: 0.6s; }

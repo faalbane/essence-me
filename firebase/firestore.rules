@@ -1,0 +1,40 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Usernames — anyone can read, only the owner can write
+    match /usernames/{username} {
+      allow read: if true;
+      allow create: if request.auth != null
+        && request.resource.data.uid == request.auth.uid;
+      allow delete: if request.auth != null
+        && resource.data.uid == request.auth.uid;
+    }
+
+    // User profiles
+    match /users/{uid} {
+      allow read: if true;
+      allow create, update: if request.auth != null
+        && request.auth.uid == uid;
+
+      // Diary entries — only the owner
+      match /diary_entries/{entryId} {
+        allow read, write: if request.auth != null
+          && request.auth.uid == uid;
+      }
+
+      // Visitor sessions — anyone can create, only owner can read all
+      match /visitor_sessions/{sessionId} {
+        allow create: if true;
+        allow read: if request.auth != null
+          && request.auth.uid == uid;
+      }
+    }
+
+    // Rate limits — server-side only (admin SDK bypasses rules)
+    match /rate_limits/{id} {
+      allow read, write: if false;
+    }
+  }
+}
