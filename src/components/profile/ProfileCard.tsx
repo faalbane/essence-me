@@ -2,12 +2,26 @@
 
 import Avatar from "./Avatar";
 
+function formatUpdatedAt(isoString: string): string {
+  const date = new Date(isoString);
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+  if (diffDays === 0) return "today";
+  if (diffDays === 1) return "yesterday";
+  if (diffDays < 30) return `${diffDays}d ago`;
+
+  return date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+}
+
 interface ProfileCardProps {
   displayName: string;
   username: string;
   avatarUrl?: string;
   essenceStrength?: number;
   totalQuestions?: number;
+  updatedAt?: string;
 }
 
 export default function ProfileCard({
@@ -16,6 +30,7 @@ export default function ProfileCard({
   avatarUrl,
   essenceStrength = 0,
   totalQuestions = 0,
+  updatedAt,
 }: ProfileCardProps) {
   return (
     <div className="text-center space-y-6 animate-drift-up">
@@ -35,6 +50,13 @@ export default function ProfileCard({
           @{username}
         </p>
       </div>
+
+      {/* Updated timestamp */}
+      {updatedAt && (
+        <p className="font-mono text-[10px] tracking-[0.2em] text-teal-glow/30">
+          Updated {formatUpdatedAt(updatedAt)}
+        </p>
+      )}
 
       {/* Stats bar */}
       <div className="flex justify-center gap-8">

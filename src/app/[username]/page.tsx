@@ -16,6 +16,7 @@ interface UserData {
   voiceId?: string;
   essenceStatus?: string;
   personalityProfile?: Record<string, unknown>;
+  updatedAt?: string;
   stats?: { diaryEntries: number; totalQuestions: number };
 }
 
@@ -81,6 +82,7 @@ export default async function ProfilePage({ params }: Props) {
           avatarUrl={user.avatarUrl}
           essenceStrength={essenceStrength}
           totalQuestions={user.stats?.totalQuestions || 0}
+          updatedAt={user.updatedAt}
         />
 
         <div className="glass-panel rounded-sm overflow-hidden">
